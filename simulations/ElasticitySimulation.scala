@@ -21,22 +21,13 @@ class ElasticitySimulation extends Simulation {
 			"Content-Type" -> """application/json"""
 	)
 
-	val scn = scenarioInstance("First wave", 17000L)
-/*	scenario("First wave")
-		.exec((s:Session) => s.setAttribute("startTime", System.currentTimeMillis))
-		.exec((s:Session) => s.setAttribute("duration", 30000L))
-		.asLongAs(isContinue) {
-			exec(http("request_1")
-					.post("/testapp/meetings/reserveLoanNegotiation")
-					.headers(headers_1)
-						.fileBody("ElasticitySimulation_request_1.txt"))
-			.pause(500 milliseconds, 800 milliseconds)
-		}
-*/	
-	val scn2 = scenarioInstance("Second wave", 30000L)
+	val scn = scenarioInstance("First wave", 60*60*1000)
+	val scn2 = scenarioInstance("Second wave", 40*60*1000)
+	val scn3 = scenarioInstance("Third wave", 20*60*1000)
 
-	setUp(scn.users(3).ramp(10).protocolConfig(httpConf))
-	setUp(scn2.users(3).ramp(10).delay(7).protocolConfig(httpConf))	
+	setUp(scn.users(5).ramp(5).protocolConfig(httpConf))
+	setUp(scn2.users(10).ramp(10).delay(10*60).protocolConfig(httpConf))
+	setUp(scn3.users(100).ramp(60).delay(20*60).protocolConfig(httpConf))
 
 	def scenarioInstance(name:String, duration:Long) : ScenarioBuilder = {
 		return scenario(name)
